@@ -71,8 +71,8 @@
 
   var executeShellCommand = function(shellCommand, msg) {
     log("executing shell command '%s'", shellCommand);
-    shell.exec(shellCommand, function(code, output) {
-      log("shell exec result code %d [%s]", code, output);
+    shell.exec(shellCommand, {silent:true}, function(code, output, err) {
+      log("shell exec result code %d [%j], err: [%j]", code, output, err);
       // Send SMS response.
       monitor.sendResponse(msg.from, output, msg.id);
     });    
