@@ -21,10 +21,14 @@
       } else {
         switch (command) {
           case "dongle-reboot":
+            // Careful - this command appears to sometimes break the dongle interface.
+            // The dongle appears to prefer the device is rebooted with the dongle in place,
+            // rather than the dongle rebooted (or hot-plugged) while the device is powered on.
             monitor.sendResponse(msg.from, "rebooting dongle", msg.id);
             monitor.rebootDevice();
             break;
           case "update":
+            // Pull the latest sms command processor (i.e. this process)
             pullLatest(msg);
             break;
           case "status":
