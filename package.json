@@ -1,0 +1,16 @@
+{
+  "name": "nqm-sms-command-processor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "toby.ealden@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "nqm-k4203-z-interface": "git://github.com/nqminds/nqm-k4203-z-interface.git",
+    "shelljs": "^0.7.0"
+  }
+}
