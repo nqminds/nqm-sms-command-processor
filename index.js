@@ -17,7 +17,7 @@
       var command = msg.body.substr(1);
       // Check this is a shell command.
       if (command.indexOf("!") === 0) {
-        executeShellCommand(msg);
+        handleShellCommand(msg);
       } else {
         switch (command) {
           case "dongle-reboot":
@@ -36,6 +36,7 @@
             break;
           default:
             log("unknown non-shell command => ignoring %s", command);
+            monitor.sendResponse(msg.from, "unknown command: " + command, msg.id);
             break;
         }    
       }      
@@ -48,8 +49,7 @@
 
   var pullLatest = function(msg) {
     log("pulling latest code from git");
-    var execResult = shell.exec("git fetch -v origin master:refs/remotes/origin/master");
-    monitor.sendResponse(msg.from, execResult.stdout.trim(), msg.id);  
+    executeShellCommand("git fetch -v origin master:refs/remotes/origin/master", msg);
   };
   
   var getInterliNQStatus = function(msg) {
@@ -64,8 +64,12 @@
     monitor.sendResponse(msg.from, status, msg.id);
   };
 
-  var executeShellCommand = function(msg) {
+  var handleShellCommand = function(msg) {
     var shellCommand = msg.body.substr(2);
+    executeShellCommand(shellCommand, msg);
+  };  
+
+  var executeShellCommand = function(shellCommand, msg) {
     log("executing shell command '%s'", shellCommand);
     shell.exec(shellCommand, function(code, output) {
       log("shell exec result code %d [%s]", code, output);
