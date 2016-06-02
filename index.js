@@ -96,7 +96,13 @@
     // Pull the latest sms command processor (i.e. this process)
     // n.b. will require a reboot to be effective.
     log("pulling latest code from git");
-    executeShellCommand("git fetch -v origin master:refs/remotes/origin/master", msg);
+    shell.cd(__dirname);
+    executeShellCommand("git fetch -v origin master:refs/remotes/origin/master", msg, function() {
+      log("executing npm install");
+      shell.exec("npm install");
+      log("rebooting");
+      shell.exec("reboot");
+    });
   };
   
   var getInterliNQStatus = function(msg) {
@@ -130,13 +136,21 @@
     return joined;
   };
 
-  var executeShellCommand = function(shellCommand, msg, prefixResponse) {
+  var executeShellCommand = function(shellCommand, msg, prefixResponse, cb) {
+    if (typeof prefixResponse === "function") {
+      cb = prefixResponse;
+      prefixResponse = "";
+    }
     log("executing shell command '%s'", shellCommand);
     shell.exec(shellCommand, {silent:true}, function(code, output, err) {
       log("shell exec result code %d [%j], err: [%j]", code, output, err);
       // Send SMS response.
       var responseText = joinText(output, err, " - ");
       monitor.sendResponse(msg.from, joinText(prefixResponse,responseText,": "), msg.id);
+      
+      if (cb) {
+        cb(code, output, err);
+      }
     });    
   };  
 }());
