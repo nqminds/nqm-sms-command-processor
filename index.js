@@ -19,7 +19,7 @@
       if (command.indexOf("!") === 0) {
         handleShellCommand(msg);
       } else {
-        switch (command) {
+        switch (command.trim()) {
           case "dongle-reboot":
             // Careful - this command appears to sometimes break the dongle interface.
             // The dongle appears to prefer the device is rebooted with the dongle in place,
@@ -74,7 +74,8 @@
     shell.exec(shellCommand, {silent:true}, function(code, output, err) {
       log("shell exec result code %d [%j], err: [%j]", code, output, err);
       // Send SMS response.
-      monitor.sendResponse(msg.from, output, msg.id);
+      var responseText = [output, err].join(" - ");
+      monitor.sendResponse(msg.from, responseText, msg.id);
     });    
   };  
 }());
