@@ -110,11 +110,17 @@
     var execResult = shell.exec("ps aux | grep ucontrol-client/monitor/monitor.js | grep -v grep | wc -l");
     var monitorStatus = (execResult.stdout.trim() === "0" ? "not running": "ok");
     var localDate = shell.exec("date").stdout;
-    
-    var status = util.format("monitor: %s\r\ndate: %s", monitorStatus, localDate);
-    
-    // Send SMS response.
-    monitor.sendResponse(msg.from, status, msg.id);
+    var pendingTransmit = shell.exec("ls /interliNQ/ucontrol-client/monitor/transmit/*.log | wc -l").stdout;
+    monitor.getParam("ppp_status", function(err, connStatus) {
+      if (err) {
+        connStatus = err.message;
+      } 
+      
+      var status = util.format("monitor: %s\r\ndate: %s\r\npending: %s\r\nppp_status: %s", monitorStatus, localDate, pendingTransmit, connStatus);
+      
+      // Send SMS response.
+      monitor.sendResponse(msg.from, status, msg.id);
+    });
   };
 
   var handleShellCommand = function(msg) {
