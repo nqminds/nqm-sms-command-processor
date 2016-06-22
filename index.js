@@ -116,7 +116,7 @@
         connStatus = err.message;
       } 
       
-      var status = util.format("monitor: %s\r\ndate: %s\r\npending: %s\r\nppp_status: %s", monitorStatus, localDate, pendingTransmit, connStatus);
+      var status = util.format("monitor: %s\r\ndate: %s\r\npending: %s\r\nppp_status: %j", monitorStatus, localDate, pendingTransmit, connStatus);
       
       // Send SMS response.
       monitor.sendResponse(msg.from, status, msg.id);
