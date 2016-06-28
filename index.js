@@ -97,7 +97,7 @@
     // n.b. will require a reboot to be effective.
     log("pulling latest code from git");
     shell.cd(__dirname);
-    executeShellCommand("git fetch -v origin master:refs/remotes/origin/master", msg, function() {
+    executeShellCommand("git fetch -v origin emon-003:refs/remotes/origin/emon-003", msg, function() {
       log("executing npm install");
       shell.exec("npm install");
       log("rebooting");
